@@ -1,0 +1,8 @@
+strict graph H {
+    n0 -- n1 -- n2 -- n0;  /* a cycle */
+    n0 -- {a b c d};
+    /* a star */
+    n0 -- n3;
+    n0 -- n3 [weight=1];   /* same edge because graph is strict */
+}
+
