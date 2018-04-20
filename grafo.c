@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include "grafo.h"
+#include <string.h>
 #include <graphviz/cgraph.h>
+#include "grafo.h"
 
 //------------------------------------------------------------------------------
 // (apontador para) estrutura de dados para representar um grafo
@@ -9,7 +10,7 @@
 // 
 // o grafo tem um nome, que é uma "string"
 
-typedef agraph_t grafo {};
+typedef grafo * agraph_t;
 
 //------------------------------------------------------------------------------
 // desaloca toda a memória usada em *g
@@ -20,7 +21,7 @@ typedef agraph_t grafo {};
 
 /* Corrigir essa funcao, retorna erro */
 int destroi_grafo(grafo g) {
-    return agclose((Agraph_t *)g);
+    return ! agclose((Agraph_t *)g);
 }
 //------------------------------------------------------------------------------
 // lê um grafo no formato dot de input
@@ -63,6 +64,17 @@ grafo escreve_grafo(FILE *output, grafo g) {
 // conforme o vértice seja consumidor ou produto, respectivamente
 
 grafo recomendacoes(grafo g){
+    Agnode_t *n;
+    Agedge_t *e;
+    for (n = agfstnode(g); n; n = agnxtnode(g,n)) {
+        printf("Vértice: %s\n",agnameof(n));
+        for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
+                if (!strcmp(agnameof(n), agnameof(aghead(e))))
+                    printf("---->Vizinho: %s\n",agnameof(agtail(e)));
+                else
+                    printf("---->Vizinho: %s\n",agnameof(aghead(e)));
+        }
+    }
 
   return g;
 }

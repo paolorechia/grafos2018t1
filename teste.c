@@ -13,7 +13,9 @@ int main(void) {
 
     return 1;
 
+  recomendacoes(g);
+
   escreve_grafo(stdout, g);
 
-  return ! destroi_grafo(g);
+  return destroi_grafo(g);
 }
