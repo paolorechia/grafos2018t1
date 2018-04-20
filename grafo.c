@@ -30,9 +30,13 @@ int destroi_grafo(grafo g) {
 //         NULL, em caso de erro 
 
 grafo le_grafo(FILE *input) {
-    
-  
-  return 0;
+
+    Agraph_t *g;
+    if (g = agread(input, NULL)){
+
+        return g;
+    }
+    else return NULL;
 }
 //------------------------------------------------------------------------------
 // escreve o grafo g em output usando o formato dot.
@@ -42,8 +46,10 @@ grafo le_grafo(FILE *input) {
 //         NULL, em caso de erro 
 
 grafo escreve_grafo(FILE *output, grafo g) {
-  
-  return g;
+    if (g = agwrite(g, output)){
+        return g;
+    }
+    else return NULL;
 }
 //------------------------------------------------------------------------------
 // devolve o grafo de recomendações de g
