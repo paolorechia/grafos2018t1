@@ -9,7 +9,7 @@
 // 
 // o grafo tem um nome, que é uma "string"
 
-struct grafo {};
+typedef agraph_t grafo {};
 
 //------------------------------------------------------------------------------
 // desaloca toda a memória usada em *g
