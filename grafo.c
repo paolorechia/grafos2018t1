@@ -18,9 +18,9 @@ struct grafo {};
 //         ou 
 //         0, caso contrário
 
+/* Corrigir essa funcao, retorna erro */
 int destroi_grafo(grafo g) {
-  
-  return 0;
+    return agclose((Agraph_t *)g);
 }
 //------------------------------------------------------------------------------
 // lê um grafo no formato dot de input
