@@ -17,4 +17,6 @@ Tópicos:
 
     Para cada v E V(G)
         Se v.tipo == 'c':
-            Para cada u E vizinhanca(v)
+            Para cada u E V(G), tal que u != v e u.tipo == 'c':
+                Para cada u E vizinhanca(v)
+                
