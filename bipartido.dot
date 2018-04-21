@@ -1,0 +1,26 @@
+strict graph G{
+    joao [tipo=c];
+    fula [tipo=c];
+    sicr [tipo=c];
+    robe [tipo=c];
+
+    celular[tipo=p];
+    tv[tipo=p];
+    pc[tipo=p];
+    teclado[tipo=p];
+    monitor[tipo=p];
+    mouse[tipo=p];
+
+    joao -- celular;
+    joao -- tv;
+    joao -- pc;
+    joao -- mouse;
+    joao -- teclado;
+    joao -- monitor;
+    fula -- celular;
+    fula -- tv;
+    sicr -- pc;
+    sicr -- tv;
+    robe -- celular;
+}
+
