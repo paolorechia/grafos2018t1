@@ -1,2 +1,4 @@
 *.swp
 *.dot
+*.pdf
+*.o

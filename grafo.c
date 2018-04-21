@@ -3,6 +3,8 @@
 #include <graphviz/cgraph.h>
 #include "grafo.h"
 
+
+#define DEBUG 1
 //------------------------------------------------------------------------------
 // (apontador para) estrutura de dados para representar um grafo
 // 
@@ -19,7 +21,6 @@ typedef grafo * agraph_t;
 //         ou 
 //         0, caso contrário
 
-/* Corrigir essa funcao, retorna erro */
 int destroi_grafo(grafo g) {
     return ! agclose((Agraph_t *)g);
 }
@@ -63,16 +64,26 @@ grafo escreve_grafo(FILE *output, grafo g) {
 // cada vértice de g tem um atributo "tipo" cujo valor é 'c' ou 'p',
 // conforme o vértice seja consumidor ou produto, respectivamente
 
+int eh_consumidor(Agnode_t *n, Agsym_t* sym){
+    return strchr(agxget(n, sym), 'c');
+}
+
 grafo recomendacoes(grafo g){
     Agnode_t *n;
     Agedge_t *e;
+    char str[100];
+    Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
     for (n = agfstnode(g); n; n = agnxtnode(g,n)) {
-        printf("Vértice: %s\n",agnameof(n));
-        for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
-                if (!strcmp(agnameof(n), agnameof(aghead(e))))
-                    printf("---->Vizinho: %s\n",agnameof(agtail(e)));
-                else
-                    printf("---->Vizinho: %s\n",agnameof(aghead(e)));
+        if (eh_consumidor(n, sym)){
+            printf("Vértice: %s (tipo:%s)\n",agnameof(n), agxget(n,sym));
+            for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
+                    if (!strcmp(agnameof(n), agnameof(aghead(e)))){
+                        printf("---->Vizinho: %s\n",agnameof(agtail(e)));
+                    }
+                    else{
+                        printf("---->Vizinho: %s\n",agnameof(aghead(e)));
+                    }
+            }
         }
     }
 

@@ -2,7 +2,6 @@
 #define _GRAFO_H
 
 #include <stdio.h>
-#include <graphviz/cgraph.h>
 
 //------------------------------------------------------------------------------
 // (apontador para) estrutura de dados para representar um grafo

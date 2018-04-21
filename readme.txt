@@ -16,5 +16,5 @@ Tópicos:
 1. Algoritmo implementado:
 
     Para cada v E V(G)
-        Para cada u E vizinhanca(v)
-                
+        Se v.tipo == c:
+            Para cada u E vizinhanca(v)
