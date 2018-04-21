@@ -68,14 +68,10 @@ int eh_consumidor(Agnode_t *n, Agsym_t* sym){
     return strchr(agxget(n, sym), 'c');
 }
 
-grafo recomendacoes(grafo g){
-    Agnode_t *n;
-    Agedge_t *e;
-    char str[100];
-    Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
-    for (n = agfstnode(g); n; n = agnxtnode(g,n)) {
-        if (eh_consumidor(n, sym)){
-            printf("Vértice: %s (tipo:%s)\n",agnameof(n), agxget(n,sym));
+
+// guardar essa funcao para depois
+/*
+void visita_vizinhanca(g, n, e){
             for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
                     if (!strcmp(agnameof(n), agnameof(aghead(e)))){
                         printf("---->Vizinho: %s\n",agnameof(agtail(e)));
@@ -84,9 +80,25 @@ grafo recomendacoes(grafo g){
                         printf("---->Vizinho: %s\n",agnameof(aghead(e)));
                     }
             }
+}
+*/
+
+grafo recomendacoes(grafo g){
+    Agnode_t *v;
+    Agnode_t *u;
+    Agedge_t *e;
+    char str[100];
+    Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
+    for (v = agfstnode(g); v; v = agnxtnode(g,v)) {
+        if (eh_consumidor(v, sym)){
+            printf("Vértice: %s (tipo:%s)\n",agnameof(v), agxget(v,sym));
+            u = agnxtnode(g, v);
+            while (u){
+                printf("----> Comparando com u: %s\n",agnameof(u));
+                u = agnxtnode(g, u);
+            }
         }
     }
-
   return g;
 }
 
