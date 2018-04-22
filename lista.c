@@ -16,7 +16,7 @@ Incluir:
 
 */
 typedef struct cel_struct{
-    char chave[50];
+    char key[50];
     struct cel_struct * nxt;
 } tnode;
 
@@ -30,7 +30,7 @@ thead * l_init(){
     head->node = malloc(sizeof(tnode));
     head->node->nxt = NULL;
     head->size = 0;
-    strcpy(head->node->chave,"#HEAD#");
+    strcpy(head->node->key,"#HEAD#");
     return head;
 }
 
@@ -40,7 +40,7 @@ void l_insert(thead * head, char * new){
         node = node -> nxt;
     }
     node->nxt=malloc(sizeof(tnode));
-    strcpy(node->nxt->chave,new);
+    strcpy(node->nxt->key,new);
     node->nxt->nxt=NULL;
     head->size += 1;
     return;
@@ -53,10 +53,10 @@ void l_print(thead * head){
     }
     tnode * node = head->node->nxt;
     while (node->nxt != NULL){
-        printf("%s ", node->chave);
+        printf("%s ", node->key);
         node = node->nxt;
     }
-    printf("%s ", node->chave);
+    printf("%s ", node->key);
     putchar('\n');
 }
 
@@ -68,7 +68,7 @@ int l_size(thead * head){
 /* Old code */
 /*
 void busca_l(tnode * node, char * buscado){
-    if (!strcmp(node->chave, buscado))
+    if (!strcmp(node->key, buscado))
         if (node->nxt!=NULL)
             busca_l(node->nxt, buscado);
         else
@@ -97,8 +97,8 @@ tnode * interseccao(tnode *l1, tnode *l2){
     printf("%d\n", aux1->nxt);
     while (aux1->nxt != NULL){
         while (aux2->nxt != NULL){
-            if (strcmp(aux1->chave, aux2->chave)){
-                l_insert(l_inter, aux1->chave);
+            if (strcmp(aux1->key, aux2->key)){
+                l_insert(l_inter, aux1->key);
             }
             if (aux2->nxt != NULL){
                 aux2 = aux2->nxt;
@@ -112,7 +112,7 @@ tnode * interseccao(tnode *l1, tnode *l2){
 }
 
 void remocao_l(tnode *node, int buscado, tnode *ant){
-    if (node->chave != buscado)
+    if (node->key != buscado)
         if (node->nxt != NULL)
             remocao_l(node->nxt, buscado, node);
         else
@@ -123,7 +123,7 @@ void remocao_l(tnode *node, int buscado, tnode *ant){
             
     else
     {
-        printf("Removendo elemento %d...\n", node->chave);
+        printf("Removendo elemento %d...\n", node->key);
         ant->nxt=node->nxt;
         free(node);
         return;
