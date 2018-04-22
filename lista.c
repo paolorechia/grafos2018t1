@@ -114,6 +114,23 @@ thead * l_intersection(thead *l1, thead * l2){
     return inter_l;
 }
 
+thead * l_filter(thead *l1, thead *l2){
+    thead * filtered = l_init();
+    // if l1 is empty, result is an empty list (l1)
+    // if l2 is empty, no node to filter, result is l1
+    if (l1->node->nxt == NULL || l2->node->nxt == NULL){
+        return l1;
+    }
+    tnode * node = l1->node->nxt;
+    while (node){
+        if (!l_search(l2, node->key)){
+            l_insert(filtered, node->key);
+        }
+        node = node->nxt;
+    }
+    return filtered;
+}
+
 /* Old code */
 /*
 void remocao_l(tnode *node, int buscado, tnode *ant){
@@ -161,11 +178,20 @@ int main(int argc, char * argv[])
     l_print(l_inter);
     printf("Lista com %d elemento(s)\n", l_size(l_inter));
 
-    l_clear(list1);
+    thead * l_diff1 = l_filter(list1, l_inter);
+    l_print(l_diff1);
+    printf("Lista com %d elemento(s)\n", l_size(l_diff1));
 
+    thead * l_diff2 = l_filter(list2, l_inter);
+    l_print(l_diff2);
+    printf("Lista com %d elemento(s)\n", l_size(l_diff2));
+
+    l_clear(list1);
     l_free(list1);
     l_free(list2);
     l_free(l_inter);
+    l_free(l_diff1);
+    l_free(l_diff2);
     return 0;
 
 }
