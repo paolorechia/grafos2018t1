@@ -24,7 +24,6 @@ typedef struct head{
     tnode * node;
     int size;
 } thead;
-
 thead * l_init(){
     thead * head = malloc(sizeof(thead));
     head->node = malloc(sizeof(tnode));
@@ -33,7 +32,6 @@ thead * l_init(){
     strcpy(head->node->key,"#HEAD#");
     return head;
 }
-
 void l_insert(thead * head, char * new){
     tnode * node = head->node;
     while (node->nxt != NULL){
@@ -45,7 +43,6 @@ void l_insert(thead * head, char * new){
     head->size += 1;
     return;
 }
-
 void l_print(thead * head){
     if (head->node->nxt == NULL){
         printf("Empty l\n");
@@ -63,6 +60,29 @@ void l_print(thead * head){
 int l_size(thead * head){
     return head->size;
 }
+/* Recursive node free function */
+int rec_clear(tnode * node){
+    if (node->nxt != NULL){
+        rec_clear(node->nxt);
+    }
+//    printf("Freeing node of name: %s\n", node->key);
+    node->nxt = NULL;
+    free(node);
+}
+int l_clear(thead * head){
+    tnode * node = head->node;
+    if (head->node->nxt == NULL){
+        return 0;
+    }
+    rec_clear(head->node->nxt);
+    head->node->nxt = NULL;
+}
+void l_free(thead *head){
+    l_clear(head);
+    free(head->node);
+    free(head);
+}
+
 
 
 /* Old code */
@@ -144,6 +164,8 @@ int main(int argc, char * argv[])
     printf("Lista com %d elemento(s)\n", l_size(list1));
     l_print(list1);
 
+    l_clear(list1);
+    l_free(list1);
 /*
     tnode l2;
     l_init(&l2, "Head");
