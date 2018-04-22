@@ -9,10 +9,11 @@
 
 Incluir:
 
-1 - metodo de contagem do size da l (testar)
+1 - metodo de contagem do size da l (done)
 2 - metodo de interseccao de duas ls (arrumar)
 3 - metodo de diferenca de duas ls
-4 - desalocar (free) na l inteira
+4 - metodo de limpar a lista (done)
+5 - desalocar (free) a lista inteira (done)
 
 */
 typedef struct cel_struct{
@@ -76,61 +77,51 @@ int l_clear(thead * head){
     }
     rec_clear(head->node->nxt);
     head->node->nxt = NULL;
+    head->size = 0;
 }
 void l_free(thead *head){
     l_clear(head);
     free(head->node);
     free(head);
 }
+/* Checks if element exists in list */
+int l_search(thead* head, char * buscado){
+    // if empty list
+    if (head->node->nxt == NULL){
+        return 0;
+    }
+    tnode * node = head->node->nxt;
+    while (node->nxt != NULL){
+        if (!strcmp(node->key, buscado)) return 1;
+        node = node->nxt;
+    }
+    if (!strcmp(node->key, buscado)) return 1;
+    // not found
+    return 0;
+}
 
-
+thead * l_intersection(thead *l1, thead * l2){
+    thead * inter_l = l_init();
+    // if either list is empty, intersection is empty
+    if (l1->node->nxt == NULL || l2->node->nxt == NULL){
+        return inter_l;
+    } 
+    // fetch first element
+    tnode * node = l1->node->nxt;
+    while (node->nxt != NULL){
+        if (l_search(l2, node->key)){
+            l_insert(inter_l, node->key);
+        }
+        node = node->nxt;
+    }
+    if (l_search(l2, node->key)){
+        l_insert(inter_l, node->key);
+    }
+    return inter_l;
+}
 
 /* Old code */
 /*
-void busca_l(tnode * node, char * buscado){
-    if (!strcmp(node->key, buscado))
-        if (node->nxt!=NULL)
-            busca_l(node->nxt, buscado);
-        else
-        {
-            puts("Elemento nao encontrado");
-            return;
-        }
-    else
-        puts("Elemento encontrado");
-    return;
-}
-
-
-tnode * interseccao(tnode *l1, tnode *l2){
-    tnode * l_inter;
-    tnode * aux1;
-    tnode * aux2;
-
-    l_print(l1);
-    l_print(l2);
-    aux1 = l1;
-    aux2 = l2;
-
-    l_init(l_inter, "");
-
-    printf("%d\n", aux1->nxt);
-    while (aux1->nxt != NULL){
-        while (aux2->nxt != NULL){
-            if (strcmp(aux1->key, aux2->key)){
-                l_insert(l_inter, aux1->key);
-            }
-            if (aux2->nxt != NULL){
-                aux2 = aux2->nxt;
-            }
-        } 
-        if (aux1->nxt != NULL){
-            aux1 = aux1->nxt;
-        }
-    }
-    return l_inter;
-}
-
 void remocao_l(tnode *node, int buscado, tnode *ant){
     if (node->key != buscado)
         if (node->nxt != NULL)
@@ -164,18 +155,23 @@ int main(int argc, char * argv[])
     printf("Lista com %d elemento(s)\n", l_size(list1));
     l_print(list1);
 
-    l_clear(list1);
-    l_free(list1);
-/*
-    tnode l2;
-    l_init(&l2, "Head");
-    l_insert(&l2, "Cel");
-    l_insert(&l2, "TV");
-    l_insert(&l2, "Arroz");
+    thead * list2 = l_init();
+    l_insert(list2, "Cel");
+    l_insert(list2, "TV");
+    l_insert(list2, "Feijoada");
+    printf("Lista com %d elemento(s)\n", l_size(list2));
+    l_print(list2);
+
     
-    tnode * l_inter = interseccao(l1, &l2);
+    thead * l_inter = l_intersection(list1, list2);
     l_print(l_inter);
-*/
+    printf("Lista com %d elemento(s)\n", l_size(l_inter));
+
+    l_clear(list1);
+
+    l_free(list1);
+    l_free(list2);
+    l_free(l_inter);
     return 0;
 
 }
