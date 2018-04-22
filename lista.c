@@ -50,11 +50,10 @@ void l_print(thead * head){
         return;
     }
     tnode * node = head->node->nxt;
-    while (node->nxt != NULL){
+    while (node){
         printf("%s ", node->key);
         node = node->nxt;
     }
-    printf("%s ", node->key);
     putchar('\n');
 }
 
@@ -91,12 +90,10 @@ int l_search(thead* head, char * buscado){
         return 0;
     }
     tnode * node = head->node->nxt;
-    while (node->nxt != NULL){
+    while (node){
         if (!strcmp(node->key, buscado)) return 1;
         node = node->nxt;
-    }
-    if (!strcmp(node->key, buscado)) return 1;
-    // not found
+    }   
     return 0;
 }
 
@@ -108,14 +105,11 @@ thead * l_intersection(thead *l1, thead * l2){
     } 
     // fetch first element
     tnode * node = l1->node->nxt;
-    while (node->nxt != NULL){
+    while (node){
         if (l_search(l2, node->key)){
             l_insert(inter_l, node->key);
         }
         node = node->nxt;
-    }
-    if (l_search(l2, node->key)){
-        l_insert(inter_l, node->key);
     }
     return inter_l;
 }
