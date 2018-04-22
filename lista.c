@@ -33,6 +33,7 @@ thead * inicia_lista(){
     strcpy(head->nodo->chave,"#HEAD#");
     return head;
 }
+
 void insere_lista(thead * head, char * new){
     tnodo * nodo = head->nodo;
     while (nodo->prox != NULL){
@@ -45,68 +46,27 @@ void insere_lista(thead * head, char * new){
     return;
 }
 
+void imprime_lista(thead * head){
+    if (head->nodo->prox == NULL){
+        printf("Empty list\n");
+        return;
+    }
+    tnodo * nodo = head->nodo->prox;
+    while (nodo->prox != NULL){
+        printf("%s ", nodo->chave);
+        nodo = nodo->prox;
+    }
+    printf("%s ", nodo->chave);
+    putchar('\n');
+}
+
 int tamanho_lista(thead * head){
     return head->size;
 }
+
+
+/* Old code */
 /*
-tnodo * inicia_lista(){
-    tnodo * nodo = malloc(sizeof(tnodo));
-    strcpy(nodo->chave, "#HEAD#");
-    nodo->prox=NULL;
-    return nodo;
-}
-*/
-
-void imprime_lista(tnodo * nodo){
-
-    tnodo * aux = nodo;
-    while (aux->prox != NULL){
-        aux = aux->prox;
-        printf("%s ", aux->chave);
-    }
-    putchar('\n');
-}
-/*
-void imprime_lista(tnodo * nodo){
-    printf("%s ", nodo->chave);
-    if (nodo->prox==NULL)
-    {
-        putchar('\n');
-        return; 
-    }
-    else
-        imprime_lista(nodo->prox);
-}
-*/
-
-void imprime_inverso(tnodo *nodo){
-    if (nodo->prox==NULL)
-    {
-        printf("%s ", nodo->chave);
-        return;
-    }
-    else
-    {
-        imprime_inverso(nodo->prox);
-        printf("%s ", nodo->chave);
-    }
-        
-}
-
-/*
-void insere_lista(tnodo * nodo, int new){
-    if (nodo->prox!=NULL)
-        insere_lista(nodo->prox, new);
-    else
-    {
-        nodo->prox=malloc(sizeof(tnodo));
-        strcpy(nodo->prox->chave,new);
-        nodo->prox->prox=NULL;
-    }
-    return;
-}
-*/
-
 void busca_lista(tnodo * nodo, char * buscado){
     if (!strcmp(nodo->chave, buscado))
         if (nodo->prox!=NULL)
@@ -171,26 +131,20 @@ void remocao_lista(tnodo *nodo, int buscado, tnodo *ant){
     return;
 
 }
-/* valor eh retornado em k */
+*/
+
 
 int main(int argc, char * argv[])
 {
     thead * lista1 = inicia_lista();
-    insere_lista(lista1, "Teste");
-    printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
-    inicia_lista(lista1, "Teste");
-    printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
     insere_lista(lista1, "Cel");
-    printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
     insere_lista(lista1, "TV");
-    printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
     insere_lista(lista1, "Arroz");
-    printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
     insere_lista(lista1, "Hmm");
     printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
-/*
     imprime_lista(lista1);
 
+/*
     tnodo lista2;
     inicia_lista(&lista2, "Head");
     insere_lista(&lista2, "Cel");
