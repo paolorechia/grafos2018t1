@@ -130,32 +130,6 @@ thead * l_filter(thead *l1, thead *l2){
     }
     return filtered;
 }
-
-/* Old code */
-/*
-void remocao_l(tnode *node, int buscado, tnode *ant){
-    if (node->key != buscado)
-        if (node->nxt != NULL)
-            remocao_l(node->nxt, buscado, node);
-        else
-        {
-            puts("Remocao impossivel, elemento nao encontrado");
-            return;
-        }
-            
-    else
-    {
-        printf("Removendo elemento %d...\n", node->key);
-        ant->nxt=node->nxt;
-        free(node);
-        return;
-    }
-    return;
-
-}
-*/
-
-
 int main(int argc, char * argv[])
 {
     thead * list1 = l_init();

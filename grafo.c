@@ -5,136 +5,120 @@
 #include "grafo.h"
 
 /* Estrutura de dados auxiliar - lista encadeada */
-/* Adaptar codigo da lista
-
-Incluir:
-
-1 - metodo de contagem do tamanho da lista (testar)
-2 - metodo de interseccao de duas listas (arrumar)
-3 - metodo de diferenca de duas listas
-4 - desalocar (free) na lista inteira
-
-*/
 typedef struct cel_struct{
-    char chave[50];
-    struct cel_struct * prox;
-} tnodo;
+    char key[50];
+    struct cel_struct * nxt;
+} tnode;
 
-void inicia_lista(tnodo * nodo, char * new){
-    strcpy(nodo->chave, new);
-    nodo->prox=NULL;
+typedef struct head{
+    tnode * node;
+    int size;
+} thead;
+thead * l_init(){
+    thead * head = malloc(sizeof(thead));
+    head->node = malloc(sizeof(tnode));
+    head->node->nxt = NULL;
+    head->size = 0;
+    strcpy(head->node->key,"#HEAD#");
+    return head;
 }
-
-void imprime_lista(tnodo * nodo){
-    printf("%s ", nodo->chave);
-    if (nodo->prox==NULL)
-    {
-        putchar('\n');
-        return; 
+void l_insert(thead * head, char * new){
+    tnode * node = head->node;
+    while (node->nxt != NULL){
+        node = node -> nxt;
     }
-    else
-        imprime_lista(nodo->prox);
+    node->nxt=malloc(sizeof(tnode));
+    strcpy(node->nxt->key,new);
+    node->nxt->nxt=NULL;
+    head->size += 1;
+    return;
 }
-
-void imprime_inverso(tnodo *nodo){
-    if (nodo->prox==NULL)
-    {
-        printf("%d ", nodo->chave);
+void l_print(thead * head){
+    if (head->node->nxt == NULL){
+        printf("Empty l\n");
         return;
     }
-    else
-    {
-        imprime_inverso(nodo->prox);
-        printf("%d ", nodo->chave);
+    tnode * node = head->node->nxt;
+    while (node){
+        printf("%s ", node->key);
+        node = node->nxt;
     }
-        
+    putchar('\n');
 }
 
-void insere_lista(tnodo * nodo, int new){
-    if (nodo->prox!=NULL)
-        insere_lista(nodo->prox, new);
-    else
-    {
-        nodo->prox=malloc(sizeof(tnodo));
-        strcpy(nodo->prox->chave,new);
-        nodo->prox->prox=NULL;
+int l_size(thead * head){
+    return head->size;
+}
+/* Recursive node free function */
+int rec_clear(tnode * node){
+    if (node->nxt != NULL){
+        rec_clear(node->nxt);
     }
-    return;
+//    printf("Freeing node of name: %s\n", node->key);
+    node->nxt = NULL;
+    free(node);
+}
+int l_clear(thead * head){
+    tnode * node = head->node;
+    if (head->node->nxt == NULL){
+        return 0;
+    }
+    rec_clear(head->node->nxt);
+    head->node->nxt = NULL;
+    head->size = 0;
+}
+void l_free(thead *head){
+    l_clear(head);
+    free(head->node);
+    free(head);
+}
+/* Checks if element exists in list */
+int l_search(thead* head, char * buscado){
+    // if empty list
+    if (head->node->nxt == NULL){
+        return 0;
+    }
+    tnode * node = head->node->nxt;
+    while (node){
+        if (!strcmp(node->key, buscado)) return 1;
+        node = node->nxt;
+    }   
+    return 0;
 }
 
-void busca_lista(tnodo * nodo, int buscado){
-    if (nodo->chave != buscado) 
-        if (nodo->prox!=NULL)
-            busca_lista(nodo->prox, buscado);
-        else
-        {
-            puts("Elemento nao encontrado");
-            return;
+thead * l_intersection(thead *l1, thead * l2){
+    thead * inter_l = l_init();
+    // if either list is empty, intersection is empty
+    if (l1->node->nxt == NULL || l2->node->nxt == NULL){
+        return inter_l;
+    } 
+    // fetch first element
+    tnode * node = l1->node->nxt;
+    while (node){
+        if (l_search(l2, node->key)){
+            l_insert(inter_l, node->key);
         }
-    else
-        puts("Elemento encontrado");
-    return;
+        node = node->nxt;
+    }
+    return inter_l;
 }
 
-
-tnodo interseccao(tnodo *lista1, tnodo *lista2){
-    printf("b");
-    tnodo lista_inter;
-    tnodo * aux1;
-    tnodo * aux2;
-
-    aux1 = lista1;
-    aux2 = lista2;
-
-    printf("a");
-    inicia_lista(&lista_inter, "");
-    printf("a");
-    while (aux1->prox != NULL){
-        while (aux2->prox != NULL){
-            printf("b");
-            if (strcmp(aux1->chave, aux2->chave)){
-                insere_lista(&lista_inter, aux1->chave);
-            }
-            if (aux2->prox != NULL){
-                aux2 = aux2->prox;
-            }
-        } 
-        if (aux1->prox != NULL){
-            aux1 = aux1->prox;
+thead * l_filter(thead *l1, thead *l2){
+    thead * filtered = l_init();
+    // if l1 is empty, result is an empty list (l1)
+    // if l2 is empty, no node to filter, result is l1
+    if (l1->node->nxt == NULL || l2->node->nxt == NULL){
+        return l1;
+    }
+    tnode * node = l1->node->nxt;
+    while (node){
+        if (!l_search(l2, node->key)){
+            l_insert(filtered, node->key);
         }
+        node = node->nxt;
     }
-    return lista_inter;
+    return filtered;
 }
-
-void remocao_lista(tnodo *nodo, int buscado, tnodo *ant){
-    if (nodo->chave != buscado)
-        if (nodo->prox != NULL)
-            remocao_lista(nodo->prox, buscado, nodo);
-        else
-        {
-            puts("Remocao impossivel, elemento nao encontrado");
-            return;
-        }
-            
-    else
-    {
-        printf("Removendo elemento %d...\n", nodo->chave);
-        ant->prox=nodo->prox;
-        free(nodo);
-        return;
-    }
-    return;
-
-}
-/* valor eh retornado em k */
-void tamanho_lista(tnodo * nodo, int * k){
-    if (nodo->prox!=NULL){
-        *k++;
-        tamanho_lista(nodo->prox, k);
-    }
-}
-
-
 //------------------------------------------------------------------------------
 // (apontador para) estrutura de dados para representar um grafo
 // 
@@ -204,23 +188,21 @@ int eh_consumidor(Agnode_t *n, Agsym_t* sym){
 
 
 /* Consertar seg fault */
-tnodo * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
+thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
             Agedge_t *e;
-            tnodo lista;
-            inicia_lista(&lista, "");
+            thead * vizinhos = l_init();
             for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
                     if (!strcmp(agnameof(n), agnameof(aghead(e)))){
 //                        printf("---->Vizinho: %s\n",agnameof(agtail(e)));
-                        insere_lista(&lista, agnameof(agtail(e)));
+                        l_insert(vizinhos, agnameof(agtail(e)));
                     }
                     else{
 //                        printf("---->Vizinho: %s\n",agnameof(aghead(e)));
-                        insere_lista(&lista, agnameof(aghead(e)));
+                        l_insert(vizinhos, agnameof(aghead(e)));
                     }
             }
-            imprime_lista(&lista);
-                    printf("BREAK:\n");
-            return &lista;
+            l_print(vizinhos);
+            return vizinhos;
 }
 
 // implementar:
@@ -232,27 +214,49 @@ grafo recomendacoes(grafo g){
     Agnode_t *v;
     Agnode_t *u;
     Agedge_t *e;
-    tnodo * lista1, *lista2;
 //    char str[100];
     Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
     for (v = agfstnode(g); v; v = agnxtnode(g,v)) {
         if (eh_consumidor(v, sym)){
             
             printf("Vértice: %s (tipo:%s)\n",agnameof(v), agxget(v,sym));
-            lista1 = visita_vizinhanca(g, v);
+            thead * lista1 = visita_vizinhanca(g, v);
             u = agnxtnode(g, v);
             while (u){
                 if (eh_consumidor(u, sym)){
                     printf("----> Comparando com u: %s\n",agnameof(u));
-                    lista2 = visita_vizinhanca(g, u);
-                    interseccao(lista1, lista2);
-                    // diferenca(l1, l2);
-                    // diferenca(l2, l1);
+                    thead * lista2 = visita_vizinhanca(g, u);
+                    thead * interseccao = l_intersection(lista1, lista2);
+                    thead * diff_vu = l_filter(lista1, interseccao);
+                    thead * diff_uv = l_filter(lista2, interseccao);
+                    
+                    // Imprimindo listas
+                    l_print(lista1);
+                    printf("Vertice v com %d elemento(s)\n", l_size(lista1));
+                    l_print(lista2);
+                    printf("Vertice u com %d elemento(s)\n", l_size(lista2));
+                    l_print(interseccao);
+                    printf("Interseccao com %d elemento(s)\n", l_size(interseccao));
+                    l_print(diff_vu);
+                    printf("Diff viz(v) - viz(u) com %d elemento(s)\n", l_size(diff_vu));
+                    l_print(diff_uv);
+                    printf("Diff viz(u) - viz(v) com %d elemento(s)\n", l_size(diff_uv));
+
+
+                    // Colocar aqui logica para modificar o grafo ponderado:
+                    // Criar vertice
+                    // Criar uma aresta com peso 1
+                    // Incrementar aresta com peso
     
+                    l_free(lista2);
+                    l_free(interseccao);
+                    l_free(diff_vu);
+                    l_free(diff_uv);
                 }
                 u = agnxtnode(g, u);
 
             }
+            l_free(lista1);
             
         }
     }
