@@ -34,6 +34,7 @@ void l_insert(thead * head, char * new){
     return;
 }
 void l_print(thead * head){
+    printf("--------->"); 
     if (head->node->nxt == NULL){
         printf("Empty l\n");
         return;
@@ -231,33 +232,33 @@ grafo recomendacoes(grafo g){
                     thead * diff_uv = l_filter(lista2, interseccao);
                     
                     // Imprimindo listas
+                    printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
                     l_print(lista1);
-                    printf("Vertice v com %d elemento(s)\n", l_size(lista1));
+                    printf("------> Vertice u com %d vizinho(s)\n", l_size(lista2));
                     l_print(lista2);
-                    printf("Vertice u com %d elemento(s)\n", l_size(lista2));
+                    printf("------> Interseccao com %d elemento(s)\n",\
+                            l_size(interseccao));
                     l_print(interseccao);
-                    printf("Interseccao com %d elemento(s)\n", l_size(interseccao));
+                    printf("------> Diff viz(v) - viz(u) com %d elemento(s)\n",\
+                            l_size(diff_vu));
                     l_print(diff_vu);
-                    printf("Diff viz(v) - viz(u) com %d elemento(s)\n", l_size(diff_vu));
+                    printf("------> Diff viz(u) - viz(v) com %d elemento(s)\n", \
+                            l_size(diff_uv));
                     l_print(diff_uv);
-                    printf("Diff viz(u) - viz(v) com %d elemento(s)\n", l_size(diff_uv));
 
 
                     // Colocar aqui logica para modificar o grafo ponderado:
                     // Criar vertice
                     // Criar uma aresta com peso 1
                     // Incrementar aresta com peso
-    
                     l_free(lista2);
                     l_free(interseccao);
                     l_free(diff_vu);
                     l_free(diff_uv);
                 }
                 u = agnxtnode(g, u);
-
             }
             l_free(lista1);
-            
         }
     }
   return g;
