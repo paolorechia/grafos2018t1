@@ -132,6 +132,10 @@ thead * l_filter(thead *l1, thead *l2){
 }
 int main(int argc, char * argv[])
 {
+    thead *list_del = l_init();
+    l_clear(list_del);
+    l_free(list_del);
+
     thead * list1 = l_init();
     l_insert(list1, "Cel");
     l_insert(list1, "TV");

@@ -108,8 +108,12 @@ thead * l_filter(thead *l1, thead *l2){
     thead * filtered = l_init();
     // if l1 is empty, result is an empty list (l1)
     // if l2 is empty, no node to filter, result is l1
-    if (l1->node->nxt == NULL || l2->node->nxt == NULL){
+    if (l1->node->nxt == NULL){
         return l1;
+    }
+    // create a copy to avoid free issues
+    if (l2->node->nxt == NULL){
+        return l_copy(filtered, l1);
     }
     tnode * node = l1->node->nxt;
     while (node){
@@ -231,6 +235,8 @@ grafo recomendacoes(grafo g){
                     thead * diff_vu = l_filter(lista1, interseccao);
                     thead * diff_uv = l_filter(lista2, interseccao);
                     
+                    printf("Dentro\n");
+/*
                     // Imprimindo listas
                     printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
                     l_print(lista1);
@@ -245,6 +251,7 @@ grafo recomendacoes(grafo g){
                     printf("------> Diff viz(u) - viz(v) com %d elemento(s)\n", \
                             l_size(diff_uv));
                     l_print(diff_uv);
+*/
 
 
                     // Colocar aqui logica para modificar o grafo ponderado:
@@ -258,6 +265,8 @@ grafo recomendacoes(grafo g){
                 }
                 u = agnxtnode(g, u);
             }
+            printf("Fora\n");
+//            l_print(lista1);
             l_free(lista1);
         }
     }
