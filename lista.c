@@ -4,73 +4,73 @@
 #include <graphviz/cgraph.h>
 #include "grafo.h"
 
-/* Estrutura de dados auxiliar - lista encadeada */
-/* Adaptar codigo da lista
+/* Estrutura de dados auxiliar - l encadeada */
+/* Adaptar codigo da l
 
 Incluir:
 
-1 - metodo de contagem do tamanho da lista (testar)
-2 - metodo de interseccao de duas listas (arrumar)
-3 - metodo de diferenca de duas listas
-4 - desalocar (free) na lista inteira
+1 - metodo de contagem do size da l (testar)
+2 - metodo de interseccao de duas ls (arrumar)
+3 - metodo de diferenca de duas ls
+4 - desalocar (free) na l inteira
 
 */
 typedef struct cel_struct{
     char chave[50];
-    struct cel_struct * prox;
-} tnodo;
+    struct cel_struct * nxt;
+} tnode;
 
 typedef struct head{
-    tnodo * nodo;
+    tnode * node;
     int size;
 } thead;
 
-thead * inicia_lista(){
+thead * l_init(){
     thead * head = malloc(sizeof(thead));
-    head->nodo = malloc(sizeof(tnodo));
-    head->nodo->prox = NULL;
+    head->node = malloc(sizeof(tnode));
+    head->node->nxt = NULL;
     head->size = 0;
-    strcpy(head->nodo->chave,"#HEAD#");
+    strcpy(head->node->chave,"#HEAD#");
     return head;
 }
 
-void insere_lista(thead * head, char * new){
-    tnodo * nodo = head->nodo;
-    while (nodo->prox != NULL){
-        nodo = nodo -> prox;
+void l_insert(thead * head, char * new){
+    tnode * node = head->node;
+    while (node->nxt != NULL){
+        node = node -> nxt;
     }
-    nodo->prox=malloc(sizeof(tnodo));
-    strcpy(nodo->prox->chave,new);
-    nodo->prox->prox=NULL;
+    node->nxt=malloc(sizeof(tnode));
+    strcpy(node->nxt->chave,new);
+    node->nxt->nxt=NULL;
     head->size += 1;
     return;
 }
 
-void imprime_lista(thead * head){
-    if (head->nodo->prox == NULL){
-        printf("Empty list\n");
+void l_print(thead * head){
+    if (head->node->nxt == NULL){
+        printf("Empty l\n");
         return;
     }
-    tnodo * nodo = head->nodo->prox;
-    while (nodo->prox != NULL){
-        printf("%s ", nodo->chave);
-        nodo = nodo->prox;
+    tnode * node = head->node->nxt;
+    while (node->nxt != NULL){
+        printf("%s ", node->chave);
+        node = node->nxt;
     }
-    printf("%s ", nodo->chave);
+    printf("%s ", node->chave);
     putchar('\n');
 }
 
-int tamanho_lista(thead * head){
+int l_size(thead * head){
     return head->size;
 }
 
 
 /* Old code */
 /*
-void busca_lista(tnodo * nodo, char * buscado){
-    if (!strcmp(nodo->chave, buscado))
-        if (nodo->prox!=NULL)
-            busca_lista(nodo->prox, buscado);
+void busca_l(tnode * node, char * buscado){
+    if (!strcmp(node->chave, buscado))
+        if (node->nxt!=NULL)
+            busca_l(node->nxt, buscado);
         else
         {
             puts("Elemento nao encontrado");
@@ -82,39 +82,39 @@ void busca_lista(tnodo * nodo, char * buscado){
 }
 
 
-tnodo * interseccao(tnodo *lista1, tnodo *lista2){
-    tnodo * lista_inter;
-    tnodo * aux1;
-    tnodo * aux2;
+tnode * interseccao(tnode *l1, tnode *l2){
+    tnode * l_inter;
+    tnode * aux1;
+    tnode * aux2;
 
-    imprime_lista(lista1);
-    imprime_lista(lista2);
-    aux1 = lista1;
-    aux2 = lista2;
+    l_print(l1);
+    l_print(l2);
+    aux1 = l1;
+    aux2 = l2;
 
-    inicia_lista(lista_inter, "");
+    l_init(l_inter, "");
 
-    printf("%d\n", aux1->prox);
-    while (aux1->prox != NULL){
-        while (aux2->prox != NULL){
+    printf("%d\n", aux1->nxt);
+    while (aux1->nxt != NULL){
+        while (aux2->nxt != NULL){
             if (strcmp(aux1->chave, aux2->chave)){
-                insere_lista(lista_inter, aux1->chave);
+                l_insert(l_inter, aux1->chave);
             }
-            if (aux2->prox != NULL){
-                aux2 = aux2->prox;
+            if (aux2->nxt != NULL){
+                aux2 = aux2->nxt;
             }
         } 
-        if (aux1->prox != NULL){
-            aux1 = aux1->prox;
+        if (aux1->nxt != NULL){
+            aux1 = aux1->nxt;
         }
     }
-    return lista_inter;
+    return l_inter;
 }
 
-void remocao_lista(tnodo *nodo, int buscado, tnodo *ant){
-    if (nodo->chave != buscado)
-        if (nodo->prox != NULL)
-            remocao_lista(nodo->prox, buscado, nodo);
+void remocao_l(tnode *node, int buscado, tnode *ant){
+    if (node->chave != buscado)
+        if (node->nxt != NULL)
+            remocao_l(node->nxt, buscado, node);
         else
         {
             puts("Remocao impossivel, elemento nao encontrado");
@@ -123,9 +123,9 @@ void remocao_lista(tnodo *nodo, int buscado, tnodo *ant){
             
     else
     {
-        printf("Removendo elemento %d...\n", nodo->chave);
-        ant->prox=nodo->prox;
-        free(nodo);
+        printf("Removendo elemento %d...\n", node->chave);
+        ant->nxt=node->nxt;
+        free(node);
         return;
     }
     return;
@@ -136,23 +136,23 @@ void remocao_lista(tnodo *nodo, int buscado, tnodo *ant){
 
 int main(int argc, char * argv[])
 {
-    thead * lista1 = inicia_lista();
-    insere_lista(lista1, "Cel");
-    insere_lista(lista1, "TV");
-    insere_lista(lista1, "Arroz");
-    insere_lista(lista1, "Hmm");
-    printf("Lista com %d elemento(s)\n", tamanho_lista(lista1));
-    imprime_lista(lista1);
+    thead * list1 = l_init();
+    l_insert(list1, "Cel");
+    l_insert(list1, "TV");
+    l_insert(list1, "Arroz");
+    l_insert(list1, "Hmm");
+    printf("Lista com %d elemento(s)\n", l_size(list1));
+    l_print(list1);
 
 /*
-    tnodo lista2;
-    inicia_lista(&lista2, "Head");
-    insere_lista(&lista2, "Cel");
-    insere_lista(&lista2, "TV");
-    insere_lista(&lista2, "Arroz");
+    tnode l2;
+    l_init(&l2, "Head");
+    l_insert(&l2, "Cel");
+    l_insert(&l2, "TV");
+    l_insert(&l2, "Arroz");
     
-    tnodo * lista_inter = interseccao(lista1, &lista2);
-    imprime_lista(lista_inter);
+    tnode * l_inter = interseccao(l1, &l2);
+    l_print(l_inter);
 */
     return 0;
 
