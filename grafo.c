@@ -107,20 +107,20 @@ thead * l_intersection(thead *l1, thead * l2){
     return inter_l;
 }
 
-thead * l_copy (thead *lcopy, thead *list)
+thead * l_copy(thead *list)
 {
     //Axiliar node for the main list
-    thead* lnode = list;
+    thead* new_list = l_init();
+    tnode * lnode = list->node->nxt;
     while (lnode)
     {
+        l_insert(new_list, lnode->key); //Insert the key of the list in the copy
         lnode = lnode->nxt;         //Take the next element of the list (the first is the head)
-        l_insert(lcopy, lnode->key) //Insert the key of the list in the copy
     }
-    return lcopy; //Return de head of the copy.
+    return new_list; //Return de head of the copy.
 }
 
 thead * l_filter(thead *l1, thead *l2){
-    thead * filtered = l_init();
     // if l1 is empty, result is an empty list (l1)
     // if l2 is empty, no node to filter, result is l1
     if (l1->node->nxt == NULL){
@@ -128,8 +128,9 @@ thead * l_filter(thead *l1, thead *l2){
     }
     // create a copy to avoid free issues
     if (l2->node->nxt == NULL){
-        return l_copy(filtered, l1);
+        return l_copy(l1);
     }
+    thead * filtered = l_init();
     tnode * node = l1->node->nxt;
     while (node){
         if (!l_search(l2, node->key)){
