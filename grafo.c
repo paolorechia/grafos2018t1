@@ -235,8 +235,10 @@ grafo recomendacoes(grafo g){
     Agnode_t *v;
     Agnode_t *u;
     //Agedge_t *e;
-//    char str[100];
+    //har str[100];
     Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
+
+    // H <- novo grafo
     for (v = agfstnode(g); v; v = agnxtnode(g,v)) {
         if (eh_consumidor(v, sym)){
             
@@ -250,9 +252,6 @@ grafo recomendacoes(grafo g){
                     thead * interseccao = l_intersection(lista1, lista2);
                     thead * diff_vu = l_filter(lista1, interseccao);
                     thead * diff_uv = l_filter(lista2, interseccao);
-                    
-                    printf("Dentro\n");
-/*
                     // Imprimindo listas
                     printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
                     l_print(lista1);
@@ -267,10 +266,24 @@ grafo recomendacoes(grafo g){
                     printf("------> Diff viz(u) - viz(v) com %d elemento(s)\n", \
                             l_size(diff_uv));
                     l_print(diff_uv);
-*/
 
 
                     // Colocar aqui logica para modificar o grafo ponderado:
+                    if (interseccao->size > diff_vu->size){
+                        // Temos condicao de recomendacao
+                        // Para cada w E diff_vu
+                        // se u nao eh vertice em H
+                            // adicionar u em H
+                        // se w nao eh vertice em H
+                            // adicionar w em H
+                        // se {u, w} nao eh aresta em H
+                            // adicionar aresta {u, w} no grafo H com peso = 1
+                        // senao incrementa peso de {u, w} em 1
+
+                    }
+                    if (interseccao->size > diff_uv->size){
+
+                    }
                     // Criar vertice
                     // Criar uma aresta com peso 1
                     // Incrementar aresta com peso
@@ -281,7 +294,6 @@ grafo recomendacoes(grafo g){
                 }
                 u = agnxtnode(g, u);
             }
-            printf("Fora\n");
 //            l_print(lista1);
             l_free(lista1);
         }
