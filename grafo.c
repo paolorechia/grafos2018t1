@@ -250,8 +250,9 @@ void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                                     printf("%s\n", agxget(e, sym));
                                     // set weight 1
                                     agxset(e, sym, "1");
+//                                    printf("%s recomendou %s para %s\n", agnameof();
                                 }   
-                                {   
+                                else{   
                                     // senao incrementa peso de {u, w} em 1
                                     printf("Incrementa aresta!\n");
                                     int new_weight = atoi(agxget(e, sym));
