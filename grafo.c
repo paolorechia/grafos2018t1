@@ -14,6 +14,7 @@ typedef struct head{
     tnode * node;
     int size;
 } thead;
+
 thead * l_init(){
     thead * head = malloc(sizeof(thead));
     head->node = malloc(sizeof(tnode));
@@ -58,6 +59,7 @@ int rec_clear(tnode * node){
 //    printf("Freeing node of name: %s\n", node->key);
     node->nxt = NULL;
     free(node);
+    return 0;
 }
 int l_clear(thead * head){
     tnode * node = head->node;
@@ -67,6 +69,7 @@ int l_clear(thead * head){
     rec_clear(head->node->nxt);
     head->node->nxt = NULL;
     head->size = 0;
+    return 1;
 }
 void l_free(thead *head){
     l_clear(head);
@@ -102,6 +105,18 @@ thead * l_intersection(thead *l1, thead * l2){
         node = node->nxt;
     }
     return inter_l;
+}
+
+thead * l_copy (thead *lcopy, thead *list)
+{
+    //Axiliar node for the main list
+    thead* lnode = list;
+    while (lnode)
+    {
+        lnode = lnode->nxt;         //Take the next element of the list (the first is the head)
+        l_insert(lcopy, lnode->key) //Insert the key of the list in the copy
+    }
+    return lcopy; //Return de head of the copy.
 }
 
 thead * l_filter(thead *l1, thead *l2){
@@ -194,20 +209,20 @@ int eh_consumidor(Agnode_t *n, Agsym_t* sym){
 
 /* Consertar seg fault */
 thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
-            Agedge_t *e;
-            thead * vizinhos = l_init();
-            for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
-                    if (!strcmp(agnameof(n), agnameof(aghead(e)))){
-//                        printf("---->Vizinho: %s\n",agnameof(agtail(e)));
-                        l_insert(vizinhos, agnameof(agtail(e)));
-                    }
-                    else{
-//                        printf("---->Vizinho: %s\n",agnameof(aghead(e)));
-                        l_insert(vizinhos, agnameof(aghead(e)));
-                    }
-            }
-            l_print(vizinhos);
-            return vizinhos;
+    Agedge_t *e;
+    thead * vizinhos = l_init();
+    for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
+        if (!strcmp(agnameof(n), agnameof(aghead(e)))){
+//          printf("---->Vizinho: %s\n",agnameof(agtail(e)));
+            l_insert(vizinhos, agnameof(agtail(e)));
+        }
+        else{
+//          printf("---->Vizinho: %s\n",agnameof(aghead(e)));
+            l_insert(vizinhos, agnameof(aghead(e)));
+        }
+    }
+    l_print(vizinhos);
+    return vizinhos;
 }
 
 // implementar:
@@ -218,7 +233,7 @@ thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
 grafo recomendacoes(grafo g){
     Agnode_t *v;
     Agnode_t *u;
-    Agedge_t *e;
+    //Agedge_t *e;
 //    char str[100];
     Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
     for (v = agfstnode(g); v; v = agnxtnode(g,v)) {
