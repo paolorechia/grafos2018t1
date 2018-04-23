@@ -218,7 +218,6 @@ thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
             l_insert(vizinhos, agnameof(aghead(e)));
         }
     }
-    l_print(vizinhos);
     return vizinhos;
 }
 
@@ -228,6 +227,7 @@ void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                     Agnode_t * x;
                     Agnode_t * y;
                     Agedge_t * e;
+                    Agsym_t* sym = agattr(h,AGEDGE,"weight", 0);
                     if (interseccao->size >= diferenca->size){
                         printf("%d %d\n", interseccao->size, diferenca->size);
                         // Temos condicao de recomendacao
@@ -247,12 +247,19 @@ void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                                 if (!e){
                                     // adicionar aresta {u, w} no grafo H com peso = 1
                                     e = agedge(h,x,y, "", TRUE);
+                                    printf("%s\n", agxget(e, sym));
                                     // set weight 1
+                                    agxset(e, sym, "1");
                                 }   
                                 {   
-                                    printf("Aresta!\n");
                                     // senao incrementa peso de {u, w} em 1
+                                    printf("Incrementa aresta!\n");
+                                    int new_weight = atoi(agxget(e, sym));
                                     // set weight++
+                                    new_weight++;
+                                    char number[10];
+                                    sprintf(number, "%d", new_weight);
+                                    agxset(e, sym, number);
                                 }
                                 node = node->nxt;
                                 printf("%d\n", node);
@@ -270,32 +277,34 @@ grafo recomendacoes(grafo g){
     // H sera o grafo de recomendacoes
     Agraph_t *h;
     h = agopen("H", Agstrictundirected, NULL);
+    Agsym_t* weight_sym = agattr(h,AGEDGE,"weight", "0");
+
 
     Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
     for (v = agfstnode(g); v; v = agnxtnode(g,v)) {
         if (eh_consumidor(v, sym)){
             
-//            printf("Vértice: %s (tipo:%s)\n",agnameof(v), agxget(v,sym));
+            printf("Vértice: %s (tipo:%s)\n",agnameof(v), agxget(v,sym));
             thead * lista1 = visita_vizinhanca(g, v);
+            printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
+            l_print(lista1);
             u = agnxtnode(g, v);
             while (u){
                 if (eh_consumidor(u, sym)){
-//                    printf("----> Comparando com u: %s\n",agnameof(u));
+                    printf("----> Comparando com u: %s\n",agnameof(u));
                     thead * lista2 = visita_vizinhanca(g, u);
                     thead * interseccao = l_intersection(lista1, lista2);
                     thead * diff_vu = l_filter(lista1, interseccao);
                     thead * diff_uv = l_filter(lista2, interseccao);
-/*
+
                     // Imprimindo listas
-                    printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
-                    l_print(lista1);
                     printf("------> Vertice u com %d vizinho(s)\n", l_size(lista2));
                     l_print(lista2);
 
-*/
-                    l_print(interseccao);
+
                     printf("------> Interseccao com %d elemento(s)\n",\
                             l_size(interseccao));
+                    l_print(interseccao);
                     printf("------> Diff viz(v) - viz(u) com %d elemento(s)\n",\
                             l_size(diff_vu));
                     l_print(diff_vu);
@@ -303,8 +312,8 @@ grafo recomendacoes(grafo g){
                             l_size(diff_uv));
                     l_print(diff_uv);
                     /* Gerar arestas de recomendacoes*/
-                    gera_recomendacoes(h, v, u, interseccao, diff_vu);
-                    gera_recomendacoes(h, u, v, interseccao, diff_uv);
+                    gera_recomendacoes(h, v, u, interseccao, diff_uv);
+                    gera_recomendacoes(h, u, v, interseccao, diff_vu);
 
                     l_free(lista2);
                     l_free(interseccao);
