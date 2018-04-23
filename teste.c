@@ -13,9 +13,11 @@ int main(void) {
 
     return 1;
 
-  recomendacoes(g);
+  grafo h = recomendacoes(g);
 
   escreve_grafo(stdout, g);
+  escreve_grafo(stdout, h);
 
+  destroi_grafo(h);
   return destroi_grafo(g);
 }
