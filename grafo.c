@@ -242,7 +242,7 @@ void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                                 printf("Aqui\n");
                                 printf("%d\n", node);
                                 // adicionar u em H
-                                y = agnode(h, agnameof(u), TRUE);
+                                y = agnode(h, node->key, TRUE);
                                 e = agedge(h,x,y, "", FALSE);
                                 if (!e){
                                     // adicionar aresta {u, w} no grafo H com peso = 1
@@ -304,7 +304,7 @@ grafo recomendacoes(grafo g){
                     l_print(diff_uv);
                     /* Gerar arestas de recomendacoes*/
                     gera_recomendacoes(h, v, u, interseccao, diff_vu);
-                    gera_recomendacoes(h, v, u, interseccao, diff_uv);
+                    gera_recomendacoes(h, u, v, interseccao, diff_uv);
 
                     l_free(lista2);
                     l_free(interseccao);
