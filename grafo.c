@@ -15,7 +15,7 @@ typedef struct head{
     int size;
 } thead;
 
-thead * l_init(){
+static thead * l_init(){
     thead * head = malloc(sizeof(thead));
     head->node = malloc(sizeof(tnode));
     head->node->nxt = NULL;
@@ -23,7 +23,7 @@ thead * l_init(){
     strcpy(head->node->key,"#HEAD#");
     return head;
 }
-void l_insert(thead * head, char * new){
+static void l_insert(thead * head, char * new){
     tnode * node = head->node;
     while (node->nxt != NULL){
         node = node -> nxt;
@@ -34,7 +34,7 @@ void l_insert(thead * head, char * new){
     head->size += 1;
     return;
 }
-void l_print(thead * head){
+static void l_print(thead * head){
     printf("--------->"); 
     if (head->node->nxt == NULL){
         printf("Empty l\n");
@@ -48,11 +48,11 @@ void l_print(thead * head){
     putchar('\n');
 }
 
-int l_size(thead * head){
+static int l_size(thead * head){
     return head->size;
 }
 /* Recursive node free function */
-int rec_clear(tnode * node){
+static int rec_clear(tnode * node){
     if (node->nxt != NULL){
         rec_clear(node->nxt);
     }
@@ -61,7 +61,7 @@ int rec_clear(tnode * node){
     free(node);
     return 0;
 }
-int l_clear(thead * head){
+static int l_clear(thead * head){
     tnode * node = head->node;
     if (head->node->nxt == NULL){
         return 0;
@@ -71,13 +71,13 @@ int l_clear(thead * head){
     head->size = 0;
     return 1;
 }
-void l_free(thead *head){
+static void l_free(thead *head){
     l_clear(head);
     free(head->node);
     free(head);
 }
 /* Checks if element exists in list */
-int l_search(thead* head, char * buscado){
+static int l_search(thead* head, char * buscado){
     // if empty list
     if (head->node->nxt == NULL){
         return 0;
@@ -90,7 +90,7 @@ int l_search(thead* head, char * buscado){
     return 0;
 }
 
-thead * l_intersection(thead *l1, thead * l2){
+static thead * l_intersection(thead *l1, thead * l2){
     thead * inter_l = l_init();
     // if either list is empty, intersection is empty
     if (l1->node->nxt == NULL || l2->node->nxt == NULL){
@@ -107,7 +107,7 @@ thead * l_intersection(thead *l1, thead * l2){
     return inter_l;
 }
 
-thead * l_copy(thead *list)
+static thead * l_copy(thead *list)
 {
     //Axiliar node for the main list
     thead* new_list = l_init();
@@ -120,7 +120,7 @@ thead * l_copy(thead *list)
     return new_list; //Return de head of the copy.
 }
 
-thead * l_filter(thead *l1, thead *l2){
+static thead * l_filter(thead *l1, thead *l2){
     // if l1 is empty, result is an empty list (l1)
     // if l2 is empty, no node to filter, result is l1
     if (l1->node->nxt == NULL){
@@ -199,13 +199,13 @@ grafo escreve_grafo(FILE *output, grafo g) {
 // cada vértice de g tem um atributo "tipo" cujo valor é 'c' ou 'p',
 // conforme o vértice seja consumidor ou produto, respectivamente
 
-int eh_consumidor(Agnode_t *n, Agsym_t* sym){
+static int eh_consumidor(Agnode_t *n, Agsym_t* sym){
     return strchr(agxget(n, sym), 'c');
 }
 
 
 
-thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
+static thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
     Agedge_t *e;
     thead * vizinhos = l_init();
     for (e = agfstedge(g,n); e; e = agnxtedge(g,e,n)){
@@ -221,7 +221,7 @@ thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
     return vizinhos;
 }
 
-void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
+static void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                         thead * interseccao, thead * diferenca){
                         
                     Agnode_t * x;
@@ -229,32 +229,32 @@ void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                     Agedge_t * e;
                     Agsym_t* sym = agattr(h,AGEDGE,"weight", 0);
                     if (interseccao->size >= diferenca->size){
-                        printf("%d %d\n", interseccao->size, diferenca->size);
+                        //printf("%d %d\n", interseccao->size, diferenca->size);
                         // Temos condicao de recomendacao
                         // Se o conjunto diff v - u != Vazio
                         if (diferenca->node->nxt != NULL){
-                            printf("Dif\n");
+                            //printf("Dif\n");
                             // adicionar v em H
                             x = agnode(h, agnameof(v), TRUE);
                             // Para cada u E diff_vu
                             tnode * node = diferenca->node->nxt;
                             while (node){
-                                printf("Aqui\n");
-                                printf("%d\n", node);
+                                //printf("Aqui\n");
+                                //printf("%d\n", node);
                                 // adicionar u em H
                                 y = agnode(h, node->key, TRUE);
                                 e = agedge(h,x,y, "", FALSE);
                                 if (!e){
                                     // adicionar aresta {u, w} no grafo H com peso = 1
                                     e = agedge(h,x,y, "", TRUE);
-                                    printf("%s\n", agxget(e, sym));
+                                    //printf("%s\n", agxget(e, sym));
                                     // set weight 1
                                     agxset(e, sym, "1");
 //                                    printf("%s recomendou %s para %s\n", agnameof();
                                 }   
                                 else{   
                                     // senao incrementa peso de {u, w} em 1
-                                    printf("Incrementa aresta!\n");
+                                    //printf("Incrementa aresta!\n");
                                     int new_weight = atoi(agxget(e, sym));
                                     // set weight++
                                     new_weight++;
@@ -263,11 +263,8 @@ void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                                     agxset(e, sym, number);
                                 }
                                 node = node->nxt;
-                                printf("%d\n", node);
+                                //printf("%d\n", node);
                             }
-                        }
-                        else{
-                            printf("%s\n", diferenca->node->key);
                         }
                     }
 }
@@ -278,40 +275,32 @@ grafo recomendacoes(grafo g){
     // H sera o grafo de recomendacoes
     Agraph_t *h;
     h = agopen("H", Agstrictundirected, NULL);
-    Agsym_t* weight_sym = agattr(h,AGEDGE,"weight", "0");
-
-
-    Agsym_t* sym = agattr(g,AGNODE,"tipo", 0);
-    for (v = agfstnode(g); v; v = agnxtnode(g,v)) {
+	agattr(h,AGEDGE,"weight", "0");
+    Agsym_t* sym = agattr((Agraph_t*)g,AGNODE,"tipo", 0);
+    for (v = agfstnode((Agraph_t*)g); v; v = agnxtnode((Agraph_t*)g,v)) {
         if (eh_consumidor(v, sym)){
             
-            printf("Vértice: %s (tipo:%s)\n",agnameof(v), agxget(v,sym));
-            thead * lista1 = visita_vizinhanca(g, v);
-            printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
-            l_print(lista1);
-            u = agnxtnode(g, v);
+            //printf("Vértice: %s (tipo:%s)\n",agnameof(v), agxget(v,sym));
+            thead * lista1 = visita_vizinhanca((Agraph_t*)g, v);
+            //printf("------> Vertice v com %d vizinho(s)\n", l_size(lista1));
+            //l_print(lista1);
+            u = agnxtnode((Agraph_t*)g, v);
             while (u){
                 if (eh_consumidor(u, sym)){
-                    printf("----> Comparando com u: %s\n",agnameof(u));
-                    thead * lista2 = visita_vizinhanca(g, u);
+                    //printf("----> Comparando com u: %s\n",agnameof(u));
+                    thead * lista2 = visita_vizinhanca((Agraph_t*)g, u);
                     thead * interseccao = l_intersection(lista1, lista2);
                     thead * diff_vu = l_filter(lista1, interseccao);
                     thead * diff_uv = l_filter(lista2, interseccao);
-
                     // Imprimindo listas
-                    printf("------> Vertice u com %d vizinho(s)\n", l_size(lista2));
-                    l_print(lista2);
-
-
-                    printf("------> Interseccao com %d elemento(s)\n",\
-                            l_size(interseccao));
-                    l_print(interseccao);
-                    printf("------> Diff viz(v) - viz(u) com %d elemento(s)\n",\
-                            l_size(diff_vu));
-                    l_print(diff_vu);
-                    printf("------> Diff viz(u) - viz(v) com %d elemento(s)\n", \
-                            l_size(diff_uv));
-                    l_print(diff_uv);
+                    //printf("------> Vertice u com %d vizinho(s)\n", l_size(lista2));
+                    //l_print(lista2);
+                    //printf("------> Interseccao com %d elemento(s)\n", l_size(interseccao));
+                    //l_print(interseccao);
+                    //printf("------> Diff viz(v) - viz(u) com %d elemento(s)\n", l_size(diff_vu));
+                    //l_print(diff_vu);
+                    //printf("------> Diff viz(u) - viz(v) com %d elemento(s)\n", l_size(diff_uv));
+                    //l_print(diff_uv);
                     /* Gerar arestas de recomendacoes*/
                     gera_recomendacoes(h, v, u, interseccao, diff_uv);
                     gera_recomendacoes(h, u, v, interseccao, diff_vu);
@@ -321,12 +310,12 @@ grafo recomendacoes(grafo g){
                     l_free(diff_vu);
                     l_free(diff_uv);
                 }
-                u = agnxtnode(g, u);
+                u = agnxtnode((Agraph_t*)g, u);
             }
             l_free(lista1);
         }
     }
-  return h;
+  return (grafo)h;
 }
 
 //------------------------------------------------------------------------------
