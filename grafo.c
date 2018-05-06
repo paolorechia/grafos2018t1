@@ -15,6 +15,7 @@ typedef struct head{
     int size;
 } thead;
 
+//Funçao que inicializa a lista usada para achar a diferença e a interseccao.
 static thead * l_init(){
     thead * head = malloc(sizeof(thead));
     head->node = malloc(sizeof(tnode));
@@ -23,6 +24,8 @@ static thead * l_init(){
     strcpy(head->node->key,"#HEAD#");
     return head;
 }
+
+//Funçao usada para inserir os chars (vizinhança) na lista daquele vertice.
 static void l_insert(thead * head, char * new){
     tnode * node = head->node;
     while (node->nxt != NULL){
@@ -34,6 +37,8 @@ static void l_insert(thead * head, char * new){
     head->size += 1;
     return;
 }
+
+//Funçao auxiliar para ajudar a debugar o programa.
 static void l_print(thead * head){
     printf("--------->"); 
     if (head->node->nxt == NULL){
@@ -51,6 +56,7 @@ static void l_print(thead * head){
 static int l_size(thead * head){
     return head->size;
 }
+
 /* Recursive node free function */
 static int rec_clear(tnode * node){
     if (node->nxt != NULL){
@@ -61,6 +67,8 @@ static int rec_clear(tnode * node){
     free(node);
     return 0;
 }
+
+//Funçao para limpar a lista.
 static int l_clear(thead * head){
     tnode * node = head->node;
     if (head->node->nxt == NULL){
@@ -71,6 +79,7 @@ static int l_clear(thead * head){
     head->size = 0;
     return 1;
 }
+
 static void l_free(thead *head){
     l_clear(head);
     free(head->node);
@@ -90,6 +99,7 @@ static int l_search(thead* head, char * buscado){
     return 0;
 }
 
+//Funçao que verifica a interseccao entre os dois vertives.
 static thead * l_intersection(thead *l1, thead * l2){
     thead * inter_l = l_init();
     // if either list is empty, intersection is empty
@@ -203,8 +213,7 @@ static int eh_consumidor(Agnode_t *n, Agsym_t* sym){
     return strchr(agxget(n, sym), 'c');
 }
 
-
-
+	
 static thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
     Agedge_t *e;
     thead * vizinhos = l_init();
