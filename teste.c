@@ -15,7 +15,7 @@ int main(void) {
 
   grafo h = recomendacoes(g);
 
-  escreve_grafo(stdout, g);
+//  escreve_grafo(stdout, g);
   escreve_grafo(stdout, h);
 
   destroi_grafo(h);

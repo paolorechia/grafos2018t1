@@ -42,7 +42,7 @@ dos vértices (intersecção e diferença).
 2.1 Eficiência - a lista encadeada tem alguns defeitos de eficiência:
     2.2.1 Inserção feita ao final (não é O(1)).
     2.2.2 Os nós guardam o nome dos vértices e não um ponteiro para a estrutura,
-          o que é bastante custoso em termos de memória (50 bytes por nome) de 
+          o que é bastante custoso em termos de memória (48 bytes por nome) de 
           vértice, e também acrescenta um tempo não constante na operação de
           verificação de igualdade de dois vértices (que é reduzida para igualdade
           de strings).

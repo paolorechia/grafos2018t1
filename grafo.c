@@ -8,7 +8,7 @@
 /* Estrutura de dados auxiliar - lista encadeada */
 /*************************************************/
 typedef struct cel_struct{
-    char key[50];
+    char key[48];
     struct cel_struct * nxt;
 } tnode;
 
