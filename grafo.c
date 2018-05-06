@@ -4,7 +4,9 @@
 #include <graphviz/cgraph.h>
 #include "grafo.h"
 
+/*************************************************/
 /* Estrutura de dados auxiliar - lista encadeada */
+/*************************************************/
 typedef struct cel_struct{
     char key[50];
     struct cel_struct * nxt;
@@ -57,7 +59,7 @@ static int l_size(thead * head){
     return head->size;
 }
 
-/* Recursive node free function */
+/* Funcao recursiva para limpar lista a partir do ultimo no*/
 static int rec_clear(tnode * node){
     if (node->nxt != NULL){
         rec_clear(node->nxt);
@@ -80,12 +82,13 @@ static int l_clear(thead * head){
     return 1;
 }
 
+// Desaloca memoria
 static void l_free(thead *head){
     l_clear(head);
     free(head->node);
     free(head);
 }
-/* Checks if element exists in list */
+// Busca sequencial de elemento na lista
 static int l_search(thead* head, char * buscado){
     // if empty list
     if (head->node->nxt == NULL){
@@ -98,8 +101,7 @@ static int l_search(thead* head, char * buscado){
     }   
     return 0;
 }
-
-//Funçao que verifica a interseccao entre os dois vertives.
+//Funcao que verifica a interseccao entre os dois vertives.
 static thead * l_intersection(thead *l1, thead * l2){
     thead * inter_l = l_init();
     // if either list is empty, intersection is empty
@@ -117,26 +119,30 @@ static thead * l_intersection(thead *l1, thead * l2){
     return inter_l;
 }
 
+// cria uma copia da lista
 static thead * l_copy(thead *list)
 {
-    //Axiliar node for the main list
+    // No auxiliar
     thead* new_list = l_init();
     tnode * lnode = list->node->nxt;
     while (lnode)
     {
-        l_insert(new_list, lnode->key); //Insert the key of the list in the copy
-        lnode = lnode->nxt;         //Take the next element of the list (the first is the head)
+        l_insert(new_list, lnode->key); // Insere chave na lista nova
+        lnode = lnode->nxt;         // Proximo elemento da lista
     }
     return new_list; //Return de head of the copy.
 }
 
+// Filtra l1 com os elementos da lista2
+// (Retorna elementos de l1 nao encontrados em l2)
+// Utilizado para calcular a diferenca de conjunto
 static thead * l_filter(thead *l1, thead *l2){
-    // if l1 is empty, result is an empty list (l1)
-    // if l2 is empty, no node to filter, result is l1
+    // se l1 eh vazia, resultado eh uma lista vazia (l1)
     if (l1->node->nxt == NULL){
         return l1;
     }
-    // create a copy to avoid free issues
+    // se l2 eh vazia, nenhum filtro precisa ser aplicado, retorna l1
+    // cria uma copia para evitar double free
     if (l2->node->nxt == NULL){
         return l_copy(l1);
     }
@@ -150,6 +156,10 @@ static thead * l_filter(thead *l1, thead *l2){
     }
     return filtered;
 }
+/*************************************************/
+/* Fim da estrutura de dados lista encadeada     */
+/*************************************************/
+
 //------------------------------------------------------------------------------
 // (apontador para) estrutura de dados para representar um grafo
 // 
@@ -209,11 +219,14 @@ grafo escreve_grafo(FILE *output, grafo g) {
 // cada vértice de g tem um atributo "tipo" cujo valor é 'c' ou 'p',
 // conforme o vértice seja consumidor ou produto, respectivamente
 
+// Verifica se o tipo do vertice eh 'c' (eh consumidor)
 static int eh_consumidor(Agnode_t *n, Agsym_t* sym){
     return strchr(agxget(n, sym), 'c');
 }
 
 	
+// Visita a vizinhanca do vertice e armazena os vizinhos
+// em uma lista encadeada que eh retornada
 static thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
     Agedge_t *e;
     thead * vizinhos = l_init();
@@ -230,6 +243,8 @@ static thead * visita_vizinhanca(Agraph_t *g, Agnode_t *n){
     return vizinhos;
 }
 
+// Dados um grafo ponderado, dois vertices, o conjunto interseccao das vizinhancas
+// e um conjunto diferenca das vizinhancas, gera as recomendacoes no grafo ponderado
 static void gera_recomendacoes(Agraph_t *h, Agnode_t * v, Agnode_t * u, \
                         thead * interseccao, thead * diferenca){
                         
@@ -310,6 +325,7 @@ grafo recomendacoes(grafo g){
                     //l_print(diff_vu);
                     //printf("------> Diff viz(u) - viz(v) com %d elemento(s)\n", l_size(diff_uv));
                     //l_print(diff_uv);
+
                     /* Gerar arestas de recomendacoes*/
                     gera_recomendacoes(h, v, u, interseccao, diff_uv);
                     gera_recomendacoes(h, u, v, interseccao, diff_vu);
